@@ -21,6 +21,7 @@ from xmlrpc.client import boolean
 import requests
 import datetime
 from tqdm import tqdm
+from progress.bar import IncrementalBar
 import json
 import sys
 
@@ -179,7 +180,8 @@ if __name__ == '__main__':
     uploader.create_catalog(CATALOG_yndex_disk) # созадим каталог для загрузки в него фото
     # # Загружаем фото на Яндекс диск
     i = 0
-    for photo in tqdm(photos):
+    bar = IncrementalBar('Загрузка фотографий на яндекс диск', max = count_photod)
+    for photo in photos:
         # date_photo = datetime.datetime.now().date()
         date_photo = photo['date']
         file_name = f"{photo['likes']}_{photo['id']}_{date_photo}.jpg"
@@ -189,8 +191,10 @@ if __name__ == '__main__':
         else:
             photos[i]['status'] = 'Ошибка'
         i += 1
-        if count_photod-1 == i: # Завершаем цикл по достижения количества загруженных фото
+        bar.next()
+        if count_photod == i: # Завершаем цикл по достижения количества загруженных фото
             break
+    bar.finish()
 
     # # Создадим объект Яндекс диск - Вариант через локальную загрузку фото
     # uploader = YaUploader(TOKEN_YA)
