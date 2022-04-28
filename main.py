@@ -119,12 +119,14 @@ class YaUploader:
         """Метод загружает файла на яндекс диск"""
         URL = 'https://cloud-api.yandex.net/v1/disk/resources'
         headers = {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': f'OAuth {self.token}'}
-        params = {"path": f'/{save_path}/{file_name}', "url": ext_url_file, "overwrite": overwrite}
-        result = requests.get(f'{URL}/upload', headers=headers, params=params).json()
+        # params = {"path": f'/{save_path}/{file_name}', "url": ext_url_file, "overwrite": overwrite}
+        # result = requests.get(f'{URL}/upload', headers=headers, params=params).json()
         # pprint(result)
-        responce = requests.put(result['href'])
+        # responce = requests.put(result['href'])
+        params = {"path": f'/{save_path}/{file_name}', "url": ext_url_file}
+        responce = requests.post(f'{URL}/upload', headers=headers, params=params)
         responce.raise_for_status()
-        if responce.status_code == 201:
+        if responce.status_code == 202:
             # print(f"Загрузка выполнена {file_name}")
             return True
         else:
